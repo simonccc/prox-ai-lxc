@@ -65,6 +65,16 @@ else
   msg_warn "Node.js install failed; continuing. Install later with: curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt-get install -y nodejs"
 fi
 
+# OpenAI Codex CLI (npm package; needs the Node.js install above).
+# Non-fatal for the same reason as Node: it's optional alongside Claude Code.
+msg_info "Installing OpenAI Codex CLI"
+if command -v npm >/dev/null 2>&1 \
+  && npm install -g --silent @openai/codex >/dev/null 2>&1; then
+  msg_ok "Codex CLI installed ($(codex --version 2>/dev/null || echo 'installed'))"
+else
+  msg_warn "Codex CLI install failed or Node.js missing; continuing. Install later with: sudo npm install -g @openai/codex"
+fi
+
 # GitHub CLI
 msg_info "Installing GitHub CLI"
 curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
@@ -181,6 +191,7 @@ if [ -n "${PS1:-}" ]; then
   claude          first-run login (open the URL on your laptop, paste the code back)
   claude-start    persistent tmux session for SSH use
   claude-remote   Remote Control -> steer from claude.ai/code or the mobile app
+  codex           OpenAI Codex CLI (if installed)
   ~/projects      put your repos here (persists across reboots)
 
 BANNER

@@ -1,4 +1,4 @@
-# claude-proxmox-container
+# prox-ai-lxc
 
 A one-command Proxmox installer (in the spirit of [community-scripts.org](https://community-scripts.org))
 that spins up a long-lived **Debian LXC** pre-loaded with the **Claude Code CLI** and a
@@ -9,6 +9,7 @@ baseline dev toolchain, so you can use it as a remote coding session over SSH, t
 
 - An **unprivileged** Debian LXC (Debian 13, falling back to 12) with `4 vCPU / 4 GB RAM / 32 GB disk` (all promptable).
 - **Claude Code CLI** installed via the official native installer (self-contained binary, auto-updating, `ripgrep` bundled).
+- **OpenAI Codex CLI** (`codex`, via npm; skipped with a warning if Node.js fails to install).
 - Baseline tooling: `git`, `gh`, Node.js LTS, Python 3 + `pip`/`venv`/`pipx`, `build-essential`, `tmux`, `jq`, `ripgrep`, and an OpenSSH server.
 - A non-root **`dev`** user (passwordless `sudo`) that owns Claude Code's credentials.
 - Helper commands: `claude-start` (persistent tmux) and `claude-remote` (Remote Control).
@@ -26,17 +27,16 @@ baseline dev toolchain, so you can use it as a remote coding session over SSH, t
 
 ## Install
 
-Run on the **Proxmox VE host** (as root). Once you've pushed this repo to GitHub and set the
-raw URL in `ct/claude-code.sh` (replace `REPLACE-ME`):
+Run on the **Proxmox VE host** (as root):
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/npfusaro/claude-proxmox-container/main/ct/claude-code.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/simonccc/prox-ai-lxc/main/ct/claude-code.sh)"
 ```
 
 Or from a local checkout on the node:
 
 ```bash
-git clone https://github.com/npfusaro/claude-proxmox-container && cd claude-proxmox-container
+git clone https://github.com/simonccc/prox-ai-lxc && cd prox-ai-lxc
 ./ct/claude-code.sh
 ```
 

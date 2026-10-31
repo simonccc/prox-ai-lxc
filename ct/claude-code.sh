@@ -11,7 +11,7 @@
 # self-contained (it does its own `pct create` instead of sourcing build.func).
 #
 # Usage (one-liner, once published to your GitHub):
-#   bash -c "$(curl -fsSL https://raw.githubusercontent.com/<user>/claude-proxmox-container/main/ct/claude-code.sh)"
+#   bash -c "$(curl -fsSL https://raw.githubusercontent.com/simonccc/prox-ai-lxc/main/ct/claude-code.sh)"
 #
 # Or from a local checkout:
 #   ./ct/claude-code.sh
@@ -25,7 +25,7 @@
 set -Eeuo pipefail
 
 # --- where to fetch sibling files (core.func, install script) ----------------
-REPO_RAW="${REPO_RAW:-https://raw.githubusercontent.com/npfusaro/claude-proxmox-container/main}"
+REPO_RAW="${REPO_RAW:-https://raw.githubusercontent.com/simonccc/prox-ai-lxc/main}"
 
 # Resolve our own directory if running from a local checkout.
 SELF_DIR=""
@@ -201,7 +201,7 @@ run pct create "$CTID" "$TEMPLATE_REF" \
   --net0 "name=eth0,bridge=${var_bridge},${var_net}" \
   --ostype "$var_os" \
   --onboot 1 \
-  --description "Claude Code remote dev container - see github.com/npfusaro/claude-proxmox-container"
+  --description "Claude Code remote dev container - see github.com/simonccc/prox-ai-lxc"
 msg_ok "Container created"
 
 # Console mode = shell: the Proxmox UI "Console" invokes a shell directly instead

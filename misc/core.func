@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# core.func - minimal shared helpers for the claude-proxmox-container scripts.
+# core.func - minimal shared helpers for the prox-ai-lxc scripts.
 # Distilled from the community-scripts.org (Proxmox VE Helper-Scripts) conventions
 # so both the host orchestrator and the in-container installer share one look & feel.
 # Safe to source more than once.
