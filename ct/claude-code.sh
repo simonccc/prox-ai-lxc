@@ -170,13 +170,23 @@ msg_info "Updating template catalog"
 run pveam update >/dev/null 2>&1 || true
 msg_ok "Template catalog updated"
 
-TEMPLATE="$(pveam available -section system 2>/dev/null | awk '{print $2}' | grep -E "^debian-${var_version}-standard" | sort -V | tail -n1 || true)"
+# find_template <debian-major> : newest standard template for the host's arch.
+# The catalog lists amd64 and arm64 builds side by side, so filter on the arch
+# column ($3) - otherwise `sort -V` picks arm64 (sorts after amd64) and the CT won't boot.
+HOST_ARCH="$(dpkg --print-architecture)"
+find_template() {
+  pveam available -section system 2>/dev/null \
+    | awk -v arch="$HOST_ARCH" '$3 == arch {print $2}' \
+    | grep -E "^debian-$1-standard" | sort -V | tail -n1 || true
+}
+
+TEMPLATE="$(find_template "$var_version")"
 if [[ -z "$TEMPLATE" ]]; then
-  msg_warn "Debian ${var_version} template not available; falling back to Debian 12."
+  msg_warn "Debian ${var_version} template not available for ${HOST_ARCH}; falling back to Debian 12."
   var_version="12"
-  TEMPLATE="$(pveam available -section system 2>/dev/null | awk '{print $2}' | grep -E "^debian-12-standard" | sort -V | tail -n1 || true)"
+  TEMPLATE="$(find_template 12)"
 fi
-[[ -n "$TEMPLATE" ]] || { msg_error "Could not find a Debian standard template via 'pveam available'."; exit 1; }
+[[ -n "$TEMPLATE" ]] || { msg_error "Could not find a Debian standard template for ${HOST_ARCH} via 'pveam available'."; exit 1; }
 
 if ! pveam list "$TMPL_STORAGE" 2>/dev/null | grep -q "$TEMPLATE"; then
   # No spinner here: pveam prints its own download progress bar, and a
